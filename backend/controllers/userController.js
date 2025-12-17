@@ -93,7 +93,22 @@ exports.updateUser = async (req, res) => {
 };
 
 /* ================= DELETE USER ================= */
-exports.deleteUser = async (req, res) => {
-  await User.findByIdAndDelete(req.params.id);
-  res.json({ message: "User deleted" });
+exports.deactivateUser = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, {
+      isActive: false
+    });
+
+    res.json({ message: "User deactivated" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to deactivate user" });
+  }
+};
+
+exports.activateUser = async (req, res) => {
+  await User.findByIdAndUpdate(req.params.id, {
+    isActive: true
+  });
+
+  res.json({ message: "User activated" });
 };

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { adminAPI } from "../services/api";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -18,7 +19,10 @@ export default function Register() {
     e.preventDefault();
     try {
       await adminAPI.post("/register", form);
-      alert("Registered Successfully");
+     toast.success("Registration successful", {
+      position: "top-right"
+    });
+
       navigate("/");
     } catch (error) {
       alert(error.response?.data?.message || "Register failed");

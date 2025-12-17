@@ -61,7 +61,10 @@ exports.loginAdmin = async (req, res) => {
       { expiresIn: rememberMe ? "7d" : "1d" }
     );
 
-    res.json({ token });
+    res.json({ token,admin: {
+    name: `${admin.firstName} ${admin.lastName}`,
+    email: admin.email
+  } });
 
   } catch (error) {
     console.error(error);

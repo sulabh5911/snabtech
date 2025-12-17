@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { userAPI } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import "./AddUser.css";
 
 export default function AddUser() {
@@ -15,6 +17,8 @@ export default function AddUser() {
     phone: ""
   });
    const [image, setImage] = useState(null);
+   const navigate = useNavigate();
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,18 +27,41 @@ export default function AddUser() {
  const submit = async (e) => {
   e.preventDefault();
 
+  // 🔐 VALIDATIONS
+  if (!form.name.trim()) {
+    toast.error("Name is required");
+    return;
+  }
+
+  if (!form.professionalEmail.trim()) {
+    toast.error("Professional email is required");
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.professionalEmail)) {
+    toast.error("Enter a valid professional email");
+    return;
+  }
+
+  if (!form.phone.trim()) {
+    toast.error("Phone number is required");
+    return;
+  }
+
+  if (!/^\d{10}$/.test(form.phone)) {
+    toast.error("Phone number must be exactly 10 digits");
+    return;
+  }
+
+  // ✅ API CALL
   try {
     const formData = new FormData();
-
-    // form fields append
     Object.keys(form).forEach((key) => {
       formData.append(key, form[key]);
     });
 
-    // image append
-    if (image) {
-      formData.append("profileImage", image);
-    }
+    if (image) formData.append("profileImage", image);
 
     await userAPI.post("/add", formData, {
       headers: {
@@ -43,23 +70,11 @@ export default function AddUser() {
       }
     });
 
-    alert("User added successfully");
-
-    setForm({
-      name: "",
-      professionalEmail: "",
-      personalEmail: "",
-      dob: "",
-      dateOfJoining: "",
-      role: "",
-      employmentType: "",
-      address: "",
-      phone: ""
-    });
-    setImage(null);
+    toast.success("User created successfully", { position: "top-right" });
+    navigate("/dashboard");
 
   } catch (error) {
-    alert(error.response?.data?.message || "Failed to add user");
+    toast.error(error.response?.data?.message || "Failed to add user");
   }
 };
 

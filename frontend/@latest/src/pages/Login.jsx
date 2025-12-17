@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { adminAPI } from "../services/api";
+import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
@@ -14,6 +15,11 @@ export default function Login() {
   try {
     const res = await adminAPI.post("/login", { email, password, rememberMe });
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("admin", JSON.stringify(res.data.admin)); 
+    toast.success("Login successful", {
+  position: "top-right"
+});
+
     navigate("/dashboard");
   } catch (error) {
     alert(error.response?.data?.message || "Login failed");

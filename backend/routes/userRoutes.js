@@ -3,7 +3,8 @@ const {
   addUser,
   getUsers,
   updateUser,
-  deleteUser
+  deactivateUser,
+  activateUser
 } = require("../controllers/userController");
 
 const protect = require("../middlewares/auth");
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post("/add", protect,upload.single("profileImage"),addUser);
 router.get("/", protect, getUsers);
 router.put("/:id", protect, updateUser);     // ✏️ EDIT
-router.delete("/:id", protect, deleteUser);  // 🗑️ DELETE
+router.put("/deactivate/:id", protect, deactivateUser);
+router.put("/activate/:id", activateUser);
 
 module.exports = router;

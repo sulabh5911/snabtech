@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema(
     profileImage: {
         type: String
     },
+    isActive: {
+      type: Boolean,
+      default: true
+    },
 
     name: { type: String, required: true },
     professionalEmail: { type: String, required: true, unique: true },
