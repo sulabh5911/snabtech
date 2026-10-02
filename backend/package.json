@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^3.0.3",
